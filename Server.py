@@ -7,10 +7,18 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
     s.listen()
     conn, addr = s.accept()
-    with conn:
-        print('Connected by', addr)
-        while True:
-            data = conn.recv(1024)
-            if not data:
-                break
-            conn.sendall(data)
+    # with conn:
+    print('Connected by', addr)
+    conn.sendall("Connected".encode())
+    while True:
+        received_message = conn.recv(1024)
+        if received_message:
+            print("them > ", repr(received_message))
+
+        send_message = input("me >")
+        conn.sendall(send_message.encode())
+
+        if send_message == 'q':
+            break
+
+    conn.close()
